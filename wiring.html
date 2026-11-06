@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Wiring Pemula - ESP32 Menyatu di Breadboard</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --p2: #facc15;
+      --p4: #fb923c;
+      --p5: #c084fc;
+      --gnd: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-sim {
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-sim:hover { background: #0369a1; }
+    .btn-sim.active { background: #dc2626; }
+
+    /* SVG Schematic Wrapper */
+    .diagram-wrapper {
+      background: #050811;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    svg {
+      min-width: 780px;
+      height: 720px;
+    }
+
+    /* Checklist Step-by-Step Lego Style */
+    .lego-steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      border-left: 4px solid var(--accent);
+    }
+
+    .step-badge {
+      background: var(--accent);
+      color: #090d16;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-body h4 {
+      font-size: 14px;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .step-body p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .pin-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .pill-p2 { background: rgba(250, 204, 21, 0.2); color: #facc15; }
+    .pill-p4 { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+    .pill-p5 { background: rgba(192, 132, 252, 0.2); color: #c084fc; }
+    .pill-gnd { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .pill-hole { background: #ffffff; color: #090d16; font-weight: 900; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Panduan Perakitan Pemula (ESP32 Tertancap di Breadboard)</h1>
+      <p>Semua komponen menyatu di satu papan breadboard putih Anda. Mudah dirakit, tidak mudah lepas, dan sangat rapi saat divideokan.</p>
+    </header>
+
+    <!-- CARD 1: DIAGRAM WIRING LENGKAP -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📍 Skema Posisi di Breadboard 400 Lubang</span>
+        </div>
+        <button class="btn-sim" id="btnSim" onclick="toggleAllSim()">Simulasi: NYALAKAN SEMUA LAMPU</button>
+      </div>
+
+      <div class="diagram-wrapper">
+        <svg viewBox="0 0 780 720" id="circuitSvg">
+          <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- ================= BREADBOARD PUTIH (30 BARIS) ================= -->
+          <g transform="translate(100, 20)">
+            <!-- Bodi Plastik Breadboard Putih -->
+            <rect x="0" y="0" width="580" height="680" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2.5"/>
+
+            <!-- Parit Tengah (Center Ravine) -->
+            <rect x="280" y="25" width="20" height="630" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="290" y="340" fill="#94a3b8" font-size="9" font-weight="bold" text-anchor="middle" transform="rotate(-90 290 340)">PARIT TENGAH</text>
+
+            <!-- Huruf Kolom Embossed: A B C D E | F G H I J -->
+            <g font-size="11" fill="#64748b" font-weight="900" text-anchor="middle">
+              <text x="110" y="22">A</text><text x="146" y="22">B</text><text x="182" y="22">C</text><text x="218" y="22">D</text><text x="254" y="22">E</text>
+              <text x="326" y="22">F</text><text x="362" y="22">G</text><text x="398" y="22">H</text><text x="434" y="22">I</text><text x="470" y="22">J</text>
+            </g>
+
+            <!-- Nomor Baris Embossed: 1, 5, 10, 15, 20, 25, 30 -->
+            <g font-size="10" fill="#64748b" font-weight="bold" text-anchor="middle">
+              <text x="80" y="52">1</text>
+              <text x="80" y="132">5</text>
+              <text x="80" y="232">10</text>
+              <text x="80" y="332">15</text>
+              <text x="80" y="432">20</text>
+              <text x="80" y="532">25</text>
+              <text x="80" y="632">30</text>
+
+              <text x="500" y="52">1</text>
+              <text x="500" y="132">5</text>
+              <text x="500" y="232">10</text>
+              <text x="500" y="332">15</text>
+              <text x="500" y="432">20</text>
+              <text x="500" y="532">25</text>
+              <text x="500" y="632">30</text>
+            </g>
+
+            <!-- Rel Daya Sisi Kanan (Rel Ground Biru Minus -) -->
+            <g transform="translate(530, 35)">
+              <text x="12" y="-4" fill="#38bdf8" font-size="12" font-weight="900">- (GND)</text>
+              <line x1="12" y1="8" x2="12" y2="615" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="6"/>
+              <!-- Titik Sambungan Ground -->
+              <circle cx="12" cy="18" r="5" fill="#38bdf8"/>
+              <circle cx="12" cy="460" r="4.5" fill="#38bdf8"/>
+              <circle cx="12" cy="520" r="4.5" fill="#38bdf8"/>
+              <circle cx="12" cy="580" r="4.5" fill="#38bdf8"/>
+            </g>
+
+            <!-- ================= ESP32 DITANCAPKAN DI ATAS BREADBOARD (BARIS 1 s/d 19) ================= -->
+            <!-- ESP32 spans from Row 1 to Row 19, pin kiri masuk Kolom B, pin kanan masuk Kolom I -->
+            <g transform="translate(136, 35)">
+              <!-- Bodi Board ESP32 Menutupi Kolom B s/d I -->
+              <rect x="0" y="0" width="308" height="380" rx="8" fill="#111827" stroke="#334155" stroke-width="2"/>
+              
+              <!-- Metal Shield ESP-WROOM-32 -->
+              <rect x="64" y="20" width="180" height="150" rx="4" fill="#475569" stroke="#64748b" stroke-width="1.5"/>
+              <text x="154" y="80" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">ESP-WROOM-32</text>
+              <text x="154" y="105" fill="#cbd5e1" font-size="10" text-anchor="middle">NodeMCU ESP-32S (38-Pin)</text>
+
+              <!-- Port Micro-USB di Bagian Bawah Board (Menghadap Baris 19) -->
+              <rect x="124" y="360" width="60" height="20" rx="3" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1.5"/>
+              <text x="154" y="374" fill="#0f172a" font-size="8" font-weight="bold" text-anchor="middle">Micro-USB</text>
+
+              <!-- Tombol EN & BOOT -->
+              <circle cx="45" cy="335" r="8" fill="#334155" stroke="#64748b"/>
+              <text x="45" y="355" fill="#94a3b8" font-size="8" text-anchor="middle">EN</text>
+              <circle cx="263" cy="335" r="8" fill="#334155" stroke="#64748b"/>
+              <text x="263" y="355" fill="#94a3b8" font-size="8" text-anchor="middle">BOOT</text>
+
+              <!-- PINOUT SISI KANAN (Tepat di Kolom I, terhubung ke Kolom J di sampingnya) -->
+              <g font-size="9" fill="#cbd5e1" font-weight="bold" text-anchor="end">
+                <!-- PIN GND (Baris 1) -->
+                <text x="298" y="20" fill="#38bdf8" font-size="10" font-weight="900">★ GND</text>
+                <!-- PIN P5 (Baris 9) -->
+                <text x="298" y="165" fill="#c084fc" font-size="10" font-weight="900">★ P5</text>
+                <!-- PIN P4 (Baris 12) -->
+                <text x="298" y="225" fill="#fb923c" font-size="10" font-weight="900">★ P4</text>
+                <!-- PIN P2 (Baris 14) -->
+                <text x="298" y="265" fill="#facc15" font-size="10" font-weight="900">★ P2</text>
+              </g>
+            </g>
+
+            <!-- LUBANG KOLOM J TERBUKA (Tempat Anda mencolok kabel di samping ESP32) -->
+            <!-- Lubang J1 (Ground) -->
+            <circle cx="470" cy="53" r="5" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+            <text x="485" y="57" fill="#38bdf8" font-size="9" font-weight="900">J1 (GND)</text>
+
+            <!-- Lubang J9 (Lampu 3) -->
+            <circle cx="470" cy="198" r="5" fill="#c084fc" stroke="#7e22ce" stroke-width="2"/>
+            <text x="485" y="202" fill="#c084fc" font-size="9" font-weight="900">J9 (P5)</text>
+
+            <!-- Lubang J12 (Lampu 2) -->
+            <circle cx="470" cy="258" r="5" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+            <text x="485" y="262" fill="#fb923c" font-size="9" font-weight="900">J12 (P4)</text>
+
+            <!-- Lubang J14 (Lampu 1) -->
+            <circle cx="470" cy="298" r="5" fill="#facc15" stroke="#a16207" stroke-width="2"/>
+            <text x="485" y="302" fill="#facc15" font-size="9" font-weight="900">J14 (P2)</text>
+
+            <!-- ================= KABEL JUMPER DARI PIN ESP32 KE BAWAH ================= -->
+            <!-- 1. Kabel Ground: Dari Lubang J1 ke Rel Biru (-) -->
+            <path d="M 470,53 L 542,53" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="495" y="45" fill="#38bdf8" font-size="8" font-weight="bold">Kabel GND</text>
+
+            <!-- ================= BAGIAN BAWAH BREADBOARD: TEMPAT 3 LED & 3 RESISTOR ================= -->
+            
+            <!-- --- SALURAN 1 (LAMPU 1 - BARIS 22 & 23) --- -->
+            <g id="ledBlock1">
+              <!-- Lubang Anoda F22 -->
+              <circle cx="326" cy="460" r="5" fill="#facc15" stroke="#a16207" stroke-width="2"/>
+              <text x="305" y="464" fill="#facc15" font-size="9" font-weight="bold">F22</text>
+              <!-- Lubang Katoda G23 -->
+              <circle cx="362" cy="480" r="4.5" fill="#64748b"/>
+              <text x="342" y="484" fill="#94a3b8" font-size="8">G23</text>
+
+              <!-- LED 1 -->
+              <circle cx="344" cy="445" r="14" id="bulb1" fill="#15803d" opacity="0.6"/>
+              <circle cx="344" cy="445" r="24" id="aura1" fill="#22c55e" opacity="0" filter="url(#glow)"/>
+              <path d="M 338,455 L 326,460" stroke="#facc15" stroke-width="2.5"/>
+              <path d="M 350,455 L 362,480" stroke="#64748b" stroke-width="2.5"/>
+              <text x="344" y="425" fill="#0f172a" font-size="9" font-weight="bold" text-anchor="middle">LED 1 (Ruang Tamu)</text>
+
+              <!-- Resistor 1: Dari Baris 23 ke Rel Ground (-) -->
+              <line x1="362" y1="480" x2="420" y2="480" stroke="#94a3b8" stroke-width="2.5"/>
+              <rect x="420" y="474" width="45" height="12" rx="3" fill="#38bdf8" stroke="#0284c7" stroke-width="1"/>
+              <line x1="465" y1="480" x2="542" y2="495" stroke="#94a3b8" stroke-width="2.5"/>
+              <text x="442" y="497" fill="#0284c7" font-size="8" font-weight="bold" text-anchor="middle">Resistor 1 ➔ Rel (-)</text>
+
+              <!-- Kabel Kuning dari J14 (P2) ke F22 -->
+              <path id="wire1" d="M 470,298 C 500,340 400,420 326,460" fill="none" stroke="#eab308" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+
+            <!-- --- SALURAN 2 (LAMPU 2 - BARIS 25 & 26) --- -->
+            <g id="ledBlock2">
+              <circle cx="326" cy="520" r="5" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+              <text x="305" y="524" fill="#fb923c" font-size="9" font-weight="bold">F25</text>
+              <circle cx="362" cy="540" r="4.5" fill="#64748b"/>
+              <text x="342" y="544" fill="#94a3b8" font-size="8">G26</text>
+
+              <!-- LED 2 -->
+              <circle cx="344" cy="505" r="14" id="bulb2" fill="#9a3412" opacity="0.6"/>
+              <circle cx="344" cy="505" r="24" id="aura2" fill="#fb923c" opacity="0" filter="url(#glow)"/>
+              <path d="M 338,515 L 326,520" stroke="#fb923c" stroke-width="2.5"/>
+              <path d="M 350,515 L 362,540" stroke="#64748b" stroke-width="2.5"/>
+              <text x="344" y="488" fill="#0f172a" font-size="9" font-weight="bold" text-anchor="middle">LED 2 (Kamar)</text>
+
+              <!-- Resistor 2 -->
+              <line x1="362" y1="540" x2="420" y2="540" stroke="#94a3b8" stroke-width="2.5"/>
+              <rect x="420" y="534" width="45" height="12" rx="3" fill="#38bdf8" stroke="#0284c7" stroke-width="1"/>
+              <line x1="465" y1="540" x2="542" y2="555" stroke="#94a3b8" stroke-width="2.5"/>
+              <text x="442" y="557" fill="#0284c7" font-size="8" font-weight="bold" text-anchor="middle">Resistor 2 ➔ Rel (-)</text>
+
+              <!-- Kabel Oranye dari J12 (P4) ke F25 -->
+              <path id="wire2" d="M 470,258 C 510,320 410,480 326,520" fill="none" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+
+            <!-- --- SALURAN 3 (LAMPU 3 - BARIS 28 & 29) --- -->
+            <g id="ledBlock3">
+              <circle cx="326" cy="580" r="5" fill="#c084fc" stroke="#7e22ce" stroke-width="2"/>
+              <text x="305" y="584" fill="#c084fc" font-size="9" font-weight="bold">F28</text>
+              <circle cx="362" cy="600" r="4.5" fill="#64748b"/>
+              <text x="342" y="604" fill="#94a3b8" font-size="8">G29</text>
+
+              <!-- LED 3 -->
+              <circle cx="344" cy="565" r="14" id="bulb3" fill="#6b21a8" opacity="0.6"/>
+              <circle cx="344" cy="565" r="24" id="aura3" fill="#c084fc" opacity="0" filter="url(#glow)"/>
+              <path d="M 338,575 L 326,580" stroke="#c084fc" stroke-width="2.5"/>
+              <path d="M 350,575 L 362,600" stroke="#64748b" stroke-width="2.5"/>
+              <text x="344" y="548" fill="#0f172a" font-size="9" font-weight="bold" text-anchor="middle">LED 3 (Dapur)</text>
+
+              <!-- Resistor 3 -->
+              <line x1="362" y1="600" x2="420" y2="600" stroke="#94a3b8" stroke-width="2.5"/>
+              <rect x="420" y="594" width="45" height="12" rx="3" fill="#38bdf8" stroke="#0284c7" stroke-width="1"/>
+              <line x1="465" y1="600" x2="542" y2="615" stroke="#94a3b8" stroke-width="2.5"/>
+              <text x="442" y="617" fill="#0284c7" font-size="8" font-weight="bold" text-anchor="middle">Resistor 3 ➔ Rel (-)</text>
+
+              <!-- Kabel Ungu dari J9 (P5) ke F28 -->
+              <path id="wire3" d="M 470,198 C 530,300 420,540 326,580" fill="none" stroke="#c084fc" stroke-width="3.5" stroke-linecap="round"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- CARD 2: PANDUAN LANGKAH PEMULA -->
+    <div class="card">
+      <div class="card-title">
+        <span>🧩 4 Langkah Merakit (Sangat Mudah untuk Pemula)</span>
+      </div>
+
+      <div class="lego-steps">
+        <div class="step-card">
+          <div class="step-badge">1</div>
+          <div class="step-body">
+            <h4>Tancapkan ESP32 di Bagian Atas Breadboard</h4>
+            <p>Posisikan breadboard tegak (angka 1 di atas). Tancapkan ESP32 di <b>Baris 1 sampai 19</b> melintasi parit tengah. Port USB menghadap ke arah bawah.<br>
+            <i>Efeknya:</i> Di sisi kanan ESP32, seluruh lubang <b>Kolom J</b> akan terbuka bebas untuk dicolok kabel jumper.</p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">2</div>
+          <div class="step-body">
+            <h4>Tancapkan 3 LED di Bagian Bawah yang Kosong</h4>
+            <p>
+              • <b>LED 1:</b> Kaki Panjang di <span class="pin-pill pill-hole">F22</span>, Kaki Pendek di <span class="pin-pill pill-hole">G23</span><br>
+              • <b>LED 2:</b> Kaki Panjang di <span class="pin-pill pill-hole">F25</span>, Kaki Pendek di <span class="pin-pill pill-hole">G26</span><br>
+              • <b>LED 3:</b> Kaki Panjang di <span class="pin-pill pill-hole">F28</span>, Kaki Pendek di <span class="pin-pill pill-hole">G29</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">3</div>
+          <div class="step-body">
+            <h4>Tancapkan 3 Resistor Biru ke Rel Ground (-)</h4>
+            <p>
+              • <b>Resistor 1:</b> Dari baris 23 ke <span class="pin-pill pill-gnd">Rel Biru (-)</span><br>
+              • <b>Resistor 2:</b> Dari baris 26 ke <span class="pin-pill pill-gnd">Rel Biru (-)</span><br>
+              • <b>Resistor 3:</b> Dari baris 29 ke <span class="pin-pill pill-gnd">Rel Biru (-)</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">4</div>
+          <div class="step-body">
+            <h4>Hubungkan 4 Kabel Jumper (Colokan Jarum)</h4>
+            <p>
+              1. Dari <span class="pin-pill pill-gnd">J1 (Pin GND)</span> ➔ colok ke <span class="pin-pill pill-gnd">Rel Biru (-)</span><br>
+              2. Dari <span class="pin-pill pill-p2">J14 (Pin P2)</span> ➔ colok ke <span class="pin-pill pill-hole">F22 (Anoda LED 1)</span><br>
+              3. Dari <span class="pin-pill pill-p4">J12 (Pin P4)</span> ➔ colok ke <span class="pin-pill pill-hole">F25 (Anoda LED 2)</span><br>
+              4. Dari <span class="pin-pill pill-p5">J9 (Pin P5)</span> ➔ colok ke <span class="pin-pill pill-hole">F28 (Anoda LED 3)</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isAllOn = false;
+
+    function toggleAllSim() {
+      isAllOn = !isAllOn;
+      const btn = document.getElementById('btnSim');
+      const bulb1 = document.getElementById('bulb1');
+      const aura1 = document.getElementById('aura1');
+      const wire1 = document.getElementById('wire1');
+
+      const bulb2 = document.getElementById('bulb2');
+      const aura2 = document.getElementById('aura2');
+      const wire2 = document.getElementById('wire2');
+
+      const bulb3 = document.getElementById('bulb3');
+      const aura3 = document.getElementById('aura3');
+      const wire3 = document.getElementById('wire3');
+
+      if (isAllOn) {
+        btn.innerText = 'Simulasi: MATIKAN SEMUA';
+        btn.classList.add('active');
+
+        bulb1.setAttribute('fill', '#22c55e'); bulb1.setAttribute('opacity', '1'); aura1.setAttribute('opacity', '0.9'); wire1.setAttribute('stroke', '#fef08a');
+        bulb2.setAttribute('fill', '#fb923c'); bulb2.setAttribute('opacity', '1'); aura2.setAttribute('opacity', '0.9'); wire2.setAttribute('stroke', '#fed7aa');
+        bulb3.setAttribute('fill', '#c084fc'); bulb3.setAttribute('opacity', '1'); aura3.setAttribute('opacity', '0.9'); wire3.setAttribute('stroke', '#f3e8ff');
+      } else {
+        btn.innerText = 'Simulasi: NYALAKAN SEMUA LAMPU';
+        btn.classList.remove('active');
+
+        bulb1.setAttribute('fill', '#15803d'); bulb1.setAttribute('opacity', '0.6'); aura1.setAttribute('opacity', '0'); wire1.setAttribute('stroke', '#eab308');
+        bulb2.setAttribute('fill', '#9a3412'); bulb2.setAttribute('opacity', '0.6'); aura2.setAttribute('opacity', '0'); wire2.setAttribute('stroke', '#fb923c');
+        bulb3.setAttribute('fill', '#6b21a8'); bulb3.setAttribute('opacity', '0.6'); aura3.setAttribute('opacity', '0'); wire3.setAttribute('stroke', '#c084fc');
+      }
+    }
+  </script>
+</body>
+</html>

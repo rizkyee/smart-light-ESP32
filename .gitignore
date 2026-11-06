@@ -1,0 +1,32 @@
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Arduino & Compiler Build Outputs
+build/
+*.bin
+*.elf
+*.hex
+*.o
+*.d
+*.map
+*.lst
+
+# IDE & Editor Configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary & Log Files
+*.log
+*.tmp
+*.bak
+/tmp/
+

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lumina IoT - Smart Light Controller</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Toast Notification -->
+  <div class="startup-toast" id="startupToast">
+    <span class="toast-svg">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </span>
+    <span id="toastMsg">Perangkat diperbarui</span>
+  </div>
+
+  <!-- Single-Page Centered Application Hub -->
+  <main class="startup-container">
+
+    <!-- 1. Header Startup Identity -->
+    <header class="startup-header">
+      <div class="brand-section">
+        <div class="brand-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1>Rumah Pintar</h1>
+          <p>ESP32 IoT Controller</p>
+        </div>
+      </div>
+
+      <div class="network-badge">
+        <span class="status-dot-pulse"></span>
+        <span>192.168.4.1</span>
+      </div>
+    </header>
+
+    <!-- 2. Overview Metric Banner (Rapi & Seimbang) -->
+    <section class="overview-card" id="overviewCard">
+      <div class="overview-text">
+        <h2 id="overviewTitle">Semua Lampu Padam</h2>
+        <p id="overviewDesc">Sistem standby dalam mode hemat daya</p>
+      </div>
+
+      <div class="metric-pill">
+        <span class="metric-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6"/><path d="M10 22h4"/>
+            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+          </svg>
+        </span>
+        <span class="metric-num" id="metricNum">0 / 3 Aktif</span>
+      </div>
+    </section>
+
+    <!-- 3. Katalog Perangkat Lampu (3 Saluran) -->
+    <section>
+      <div class="section-headline">Katalog Perangkat (3 Saluran)</div>
+
+      <div class="device-stack">
+        <!-- Saluran 1: Ruang Tamu -->
+        <article class="device-row chan-1" id="deviceRow1" onclick="window.app.toggleDevice(1)">
+          <div class="device-left">
+            <div class="device-squircle">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+                <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+              </svg>
+            </div>
+            <div class="device-meta">
+              <span class="room-chip">Ruang Tamu</span>
+              <h3 class="device-name">Lampu Utama</h3>
+              <div class="device-sub">
+                <span class="status-dot-mini"></span>
+                <span class="status-label" id="statusLabel1">Mati</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="device-right">
+            <label class="switch-control" onclick="event.stopPropagation()">
+              <input type="checkbox" id="switch1" onchange="window.app.toggleDevice(1, this.checked)">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </article>
+
+        <!-- Saluran 2: Kamar Tidur -->
+        <article class="device-row chan-2" id="deviceRow2" onclick="window.app.toggleDevice(2)">
+          <div class="device-left">
+            <div class="device-squircle">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h20"/>
+                <path d="M20 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/><path d="m19.07 10.93-1.41 1.41"/>
+                <path d="M12 6a4 4 0 0 0-4 4v8h8v-8a4 4 0 0 0-4-4Z"/>
+              </svg>
+            </div>
+            <div class="device-meta">
+              <span class="room-chip">Kamar Tidur</span>
+              <h3 class="device-name">Lampu Tidur</h3>
+              <div class="device-sub">
+                <span class="status-dot-mini"></span>
+                <span class="status-label" id="statusLabel2">Mati</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="device-right">
+            <label class="switch-control" onclick="event.stopPropagation()">
+              <input type="checkbox" id="switch2" onchange="window.app.toggleDevice(2, this.checked)">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </article>
+
+        <!-- Saluran 3: Dapur -->
+        <article class="device-row chan-3" id="deviceRow3" onclick="window.app.toggleDevice(3)">
+          <div class="device-left">
+            <div class="device-squircle">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="2" x2="12" y2="7"/>
+                <path d="M6 14h12l-2-7H8l-2 7z"/>
+                <path d="M9 18h6"/><path d="M10 21h4"/>
+              </svg>
+            </div>
+            <div class="device-meta">
+              <span class="room-chip">Dapur & Makan</span>
+              <h3 class="device-name">Lampu Dapur</h3>
+              <div class="device-sub">
+                <span class="status-dot-mini"></span>
+                <span class="status-label" id="statusLabel3">Mati</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="device-right">
+            <label class="switch-control" onclick="event.stopPropagation()">
+              <input type="checkbox" id="switch3" onchange="window.app.toggleDevice(3, this.checked)">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Mode Animasi Dinamis (3 Mode) -->
+    <section>
+      <div class="section-headline">Efek Animasi Dinamis</div>
+      <div class="modes-grid">
+        <!-- Mode 1: Strobo Blitz -->
+        <button class="mode-card" id="modeCard1" onclick="window.app.toggleMode(1)">
+          <div class="mode-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="mode-info">
+            <span class="mode-name">Strobo Blitz</span>
+            <span class="mode-sub">Kedip Cepat</span>
+          </div>
+        </button>
+
+        <!-- Mode 2: Running Wave -->
+        <button class="mode-card" id="modeCard2" onclick="window.app.toggleMode(2)">
+          <div class="mode-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="13 17 18 12 13 7"/>
+              <polyline points="6 17 11 12 6 7"/>
+            </svg>
+          </div>
+          <div class="mode-info">
+            <span class="mode-name">Running Wave</span>
+            <span class="mode-sub">Jalan 1-2-3</span>
+          </div>
+        </button>
+
+        <!-- Mode 3: Dual Hazard -->
+        <button class="mode-card" id="modeCard3" onclick="window.app.toggleMode(3)">
+          <div class="mode-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="mode-info">
+            <span class="mode-name">Dual Hazard</span>
+            <span class="mode-sub">Kedip Silang</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. Kontrol Serentak (Side-by-Side) -->
+    <section>
+      <div class="section-headline">Kontrol Serentak</div>
+      <div class="actions-grid">
+        <button class="btn-master btn-on" onclick="window.app.setMaster(true)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+          <span>Nyalakan Semua</span>
+        </button>
+
+        <button class="btn-master btn-off" onclick="window.app.setMaster(false)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/>
+          </svg>
+          <span>Matikan Semua</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 6. Spesifikasi Hardware Card -->
+    <section class="specs-card">
+      <div class="specs-item">
+        <span class="specs-key">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 9h6v6H9z"/><path d="M3 9h2"/><path d="M3 15h2"/><path d="M21 9h-2"/><path d="M21 15h-2"/><path d="M9 3v2"/><path d="M15 3v2"/><path d="M9 21v-2"/><path d="M15 21v-2"/>
+          </svg>
+          <span>Mikrokontroler</span>
+        </span>
+        <span class="specs-val">NodeMCU ESP-32S (38-Pin)</span>
+      </div>
+
+      <div class="specs-item">
+        <span class="specs-key">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+          </svg>
+          <span>Konektivitas</span>
+        </span>
+        <span class="specs-val">Wi-Fi Access Point (Offline)</span>
+      </div>
+
+      <div class="specs-item">
+        <span class="specs-key">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
+          </svg>
+          <span>Protokol Jaringan</span>
+        </span>
+        <span class="specs-val">HTTP REST Server (Port 80)</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

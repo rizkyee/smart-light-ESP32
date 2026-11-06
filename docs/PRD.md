@@ -59,15 +59,20 @@
 - **IP Server:** `http://192.168.4.1`
 - **Daftar Endpoint HTTP:**
   - `GET /` : Memuat dashboard HTML Framework7 / iOS.
-  - `GET /status` : Mendapatkan status ketiga lampu dalam JSON: `{"l1":bool,"l2":bool,"l3":bool}`.
+  - `GET /status` : Mendapatkan status ketiga lampu dalam JSON: `{"l1":bool,"l2":bool,"l3":bool,"mode":int}`.
   - `GET /on1` & `GET /off1` : Kendali Lampu 1 (GPIO 2).
   - `GET /on2` & `GET /off2` : Kendali Lampu 2 (GPIO 4).
   - `GET /on3` & `GET /off3` : Kendali Lampu 3 (GPIO 5).
   - `GET /all/on` & `GET /all/off` : Master switch kendali serentak 3 lampu.
+  - `GET /mode?val=0|1|2|3` : Kontrol 3 Efek Animasi Dinamis (0: Manual, 1: Strobo Blitz, 2: Running Wave, 3: Dual Hazard).
 
-### 4.2 Desain Web UI
-- Menggunakan list grouped card khas iOS dengan 3 tombol switch toggle hijau.
-- Dilengkapi tombol cepat *Master Action* (*Nyalakan Semua* dan *Matikan Semua*).
+### 4.2 Desain Web UI & Mode Efek Dinamis
+- **Tema Startup Bersih:** Warna putih modern, tipografi Plus Jakarta Sans & Inter, dengan 3 switch toggle iOS yang mulus.
+- **3 Mode Animasi Dinamis:**
+  1. **Strobo Blitz (90ms):** Seluruh LED berkedip cepat frekuensi tinggi bersamaan.
+  2. **Running Wave (140ms):** Lampu berjalan dinamis bergantian secara sekuensial (L1 ➔ L2 ➔ L3).
+  3. **Dual Hazard (85ms):** Kedip ganda silang ala lampu hazard strobo polisi (L1 & L2 berkedip 2x, lalu L3 berkedip 2x).
+- **Proteksi Mode & Non-Blocking Timing:** Seluruh animasi menggunakan `millis()` sehingga server web tetap responsif melayani HTTP, dan menekan switch toggle manual secara otomatis menghentikan animasi efek dan kembali ke mode manual (Mode 0).
 - 100% Pure CSS (Zero Dependency), berjalan instan di smartphone tanpa internet.
 
 ---
@@ -78,6 +83,6 @@
 |---|---|---|
 | **00:00 - 00:45** (45d) | Pembukaan & Pengenalan Alat | Perkenalan diri, tujuan membuat Smart Light 3 Saluran, perkenalan fisik: ESP32 38-pin, 3 LED, 3 Resistor, dan Breadboard. |
 | **00:45 - 01:30** (45d) | Skema Rangkaian 3 Saluran | Tunjukkan di breadboard: Pin P2, P4, P5 masing-masing ke Anoda LED 1, 2, 3. Tunjukkan ketiga resistor terhubung ke rel GND bersama. |
-| **01:30 - 03:15** (105d) | Bedah Koding & Konsep Web | Rekam Arduino IDE. Jelaskan inisialisasi 3 pin output (`pinMode`), routing endpoint (`/on1`, `/on2`, `/on3`), dan antarmuka web iOS 3 toggle. |
-| **03:15 - 04:30** (75d) | Demo Pengujian via HP | Hubungkan HP ke Wi-Fi ESP32 ➔ Buka browser `192.168.4.1` ➔ Nyalakan lampu satu per satu (Lampu 1 ➔ Lampu 2 ➔ Lampu 3) ➔ Uji tombol *Nyalakan Semua* dan *Matikan Semua*. |
+| **01:30 - 03:15** (105d) | Bedah Koding & Konsep Web | Rekam Arduino IDE. Jelaskan inisialisasi 3 pin output (`pinMode`), routing endpoint (`/on1`, `/on2`, `/on3`), `updateLightingEffects()` non-blocking `millis()`, dan antarmuka web iOS 3 toggle + 3 tombol efek dinamis. |
+| **03:15 - 04:30** (75d) | Demo Pengujian via HP | Hubungkan HP ke Wi-Fi ESP32 ➔ Buka browser `192.168.4.1` ➔ Nyalakan lampu satu per satu (Lampu 1 ➔ Lampu 2 ➔ Lampu 3) ➔ Uji 3 Mode Efek Animasi (Strobo Blitz, Running Wave, Dual Hazard) ➔ Uji tombol *Nyalakan Semua* dan *Matikan Semua*. |
 | **04:30 - 05:00** (30d) | Kesimpulan & Penutup | Ringkasan keberhasilan sistem kendali multi-channel lokal. Ucapan terima kasih dan penutup. |

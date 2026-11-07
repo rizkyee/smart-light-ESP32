@@ -211,7 +211,7 @@ class SmartHomeController {
     }
   }
 
-  /**
+  /**x
    * Terapkan data JSON dari ESP32
    */
   applyServerState(data) {

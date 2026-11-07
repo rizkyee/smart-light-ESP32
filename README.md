@@ -67,8 +67,6 @@ Pemasangan komponen dirancang rapi pada satu papan breadboard 400 titik:
 | **Resistor Saluran 3** | - | **G29** | **Rel Biru Negatif (-)** | Menahan arus balik LED 3 |
 | **Ground Utama (GND)** | `GND` | **Lubang J1** | **Rel Biru Negatif (-)** | Jalur pembumian bersama |
 
-> 💡 **Simulasi & Diagram Interaktif:** Buka berkas visual [`docs/wiring.html`](file:///Users/macbookpro/project-dev/kuliah/smart-light-ESP32/docs/wiring.html) pada peramban Anda untuk melihat diagram skematik breadboard animasi.
-
 ---
 
 ## 🌐 Dokumentasi REST API Endpoints
@@ -139,10 +137,6 @@ smart-light-ESP32/
 ├── index.html              # 🌐 Struktur Antarmuka Utama (Semantic HTML5 & Pure SVG Icons)
 ├── style.css               # 🎨 Desain Sistem Responsif (Plus Jakarta Sans, Fluid Mobile Layout)
 ├── app.js                  # ⚙️ Logika Kontrol Asinkron, Sinkronisasi REST API, & Toast Controller
-├── docs/                   # 📚 Berkas Dokumentasi & Skematik
-│   ├── PRD.md              # Product Requirement Document & Naskah Presentasi Video
-│   └── wiring.html         # Diagram Breadboard Interaktif 400-Titik
-├── assets/                 # 📸 Dokumentasi Foto Fisik Komponen Asli
 ├── README.md               # 📖 Buku Panduan Utama Proyek
 └── .gitignore              # 🛡️ Pengabaian Berkas Sampah Sistem & Build Artifacts
 ```

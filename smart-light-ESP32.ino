@@ -1,15 +1,4 @@
-/*
- * ============================================================================
- * Project      : Smart Light ESP32 - Multi-Channel (3 LEDs) Controller
- * Architecture : Non-blocking Animation Engine (Normal + 3 Dynamic Modes)
- * Header File  : "web_ui.h" (Modern Clean White Dashboard)
- * Pinout       :
- *   - Channel 1 (Ruang Tamu) : GPIO 2 (P2)
- *   - Channel 2 (Kamar Tidur): GPIO 4 (P4)
- *   - Channel 3 (Dapur)      : GPIO 5 (P5)
- * Network Mode : Wi-Fi Access Point (SSID: ESP32_Smart_Light | IP: 192.168.4.1)
- * ============================================================================
- */
+
 
 #include <WiFi.h>
 #include <WebServer.h>
